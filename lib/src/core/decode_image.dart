@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -18,24 +18,21 @@ class DecodeImage extends ImageProvider<DecodeImage> {
     this.index = 0,
   });
 
-  @override
-  ImageStreamCompleter load(DecodeImage key, DecoderCallback decode) {
+  ImageStreamCompleter load(DecodeImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode),
       scale: key.scale,
     );
   }
 
-  Future<ui.Codec> _loadAsync(DecodeImage key, DecoderCallback decode) async {
+  Future<ui.Codec> _loadAsync(DecodeImage key, ImageDecoderCallback decode) async {
     assert(key == this);
 
-    final coverEntity =
-        (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
+    final coverEntity = (await key.entity.getAssetListRange(start: index, end: index + 1))[0];
 
-    final bytes = await coverEntity
-        .thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
-
-    return decode(bytes!);
+    final bytes = await coverEntity.thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
+    ImmutableBuffer immutableBuffer = await ImmutableBuffer.fromUint8List(bytes!);
+    return decode(immutableBuffer);
   }
 
   @override

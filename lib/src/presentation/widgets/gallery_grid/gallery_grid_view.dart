@@ -57,23 +57,18 @@ class GalleryGridViewState extends State<GalleryGridView> {
                 child: GridView.builder(
                   key: ValueKey(widget.path),
                   shrinkWrap: true,
-                  padding: widget.provider.paramsModel.gridPadding ??
-                      const EdgeInsets.all(0),
-                  physics: widget.provider.paramsModel.gridViewPhysics ??
-                      const ScrollPhysics(),
-                  controller: widget.provider.paramsModel.gridViewController ??
-                      ScrollController(),
+                  padding: widget.provider.paramsModel.gridPadding ?? const EdgeInsets.all(0),
+                  physics: widget.provider.paramsModel.gridViewPhysics ?? const ScrollPhysics(),
+                  controller: widget.provider.paramsModel.gridViewController ?? ScrollController(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio:
-                        widget.provider.paramsModel.childAspectRatio,
+                    childAspectRatio: widget.provider.paramsModel.childAspectRatio,
                     crossAxisCount: widget.provider.paramsModel.crossAxisCount,
                     mainAxisSpacing: 2.5,
                     crossAxisSpacing: 2.5,
                   ),
 
                   /// render thumbnail
-                  itemBuilder: (context, index) =>
-                      _buildItem(context, index, widget.provider),
+                  itemBuilder: (context, index) => _buildItem(context, index, widget.provider),
                   itemCount: widget.provider.assetCount,
                   addRepaintBoundaries: true,
                 ),
@@ -83,17 +78,13 @@ class GalleryGridViewState extends State<GalleryGridView> {
         : Container();
   }
 
-  Widget _buildItem(
-      BuildContext context, index, GalleryMediaPickerController provider) {
+  Widget _buildItem(BuildContext context, index, GalleryMediaPickerController provider) {
     return GestureDetector(
       /// on tap thumbnail
       onTap: () async {
         var asset = cacheMap[index];
-        if (asset != null &&
-            asset.type != AssetType.audio &&
-            asset.type != AssetType.other) {
-          asset = (await widget.path!
-              .getAssetListRange(start: index, end: index + 1))[0];
+        if (asset != null && asset.type != AssetType.audio && asset.type != AssetType.other) {
+          asset = (await widget.path!.getAssetListRange(start: index, end: index + 1))[0];
           cacheMap[index] = asset;
           widget.onAssetItemClick?.call(asset, index);
         }
@@ -104,8 +95,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
     );
   }
 
-  Widget _buildScrollItem(
-      BuildContext context, int index, GalleryMediaPickerController provider) {
+  Widget _buildScrollItem(BuildContext context, int index, GalleryMediaPickerController provider) {
     /// load cache images
     final asset = cacheMap[index];
     if (asset != null) {
@@ -163,8 +153,7 @@ class GalleryGridViewState extends State<GalleryGridView> {
     }
   }
 
-  @override
-  bool operator ==(Object other) {
+  bool operator(Object other) {
     if (identical(this, other)) {
       return true;
     }
